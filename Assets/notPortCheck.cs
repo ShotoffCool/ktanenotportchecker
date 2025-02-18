@@ -179,7 +179,7 @@ public class notPortCheck : MonoBehaviour {
                 Button[i].GetComponent<MeshRenderer>().material.color = Color.white;
             }
 
-            int rng = Random.Range(0, 5);
+            int rng = Random.Range(0, 6);
             stage1Button = rng;
             StartCoroutine(TurnGreen(rng));
 
@@ -209,7 +209,7 @@ public class notPortCheck : MonoBehaviour {
                 Button[i].GetComponent<MeshRenderer>().material.color = Color.white;
             }
 
-            int rng = Random.Range(0, 5);
+            int rng = Random.Range(0, 6);
 			stage2Button = rng;
             StartCoroutine(TurnGreen(rng));
 
@@ -273,7 +273,7 @@ public class notPortCheck : MonoBehaviour {
                 Button[i].GetComponent<MeshRenderer>().material.color = Color.white;
             }
 
-            int rng = Random.Range(0, 5);
+            int rng = Random.Range(0, 6);
 			stage3Button = rng;
 			StartCoroutine(TurnGreen(rng));
 			StartCoroutine("Whistle");

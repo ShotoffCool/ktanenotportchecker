@@ -21,6 +21,6 @@ MonoBehaviour:
 
 
     Made By Shotoff Cool'
-  version: 1.0
+  version: 1.01
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 3cad7364da91d9146b80d551f97dda1a, type: 3}
