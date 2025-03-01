@@ -401,19 +401,130 @@ public class notPortCheck : MonoBehaviour {
 
 
 
-	KMSelectable[] ProcessTwitchCommand(string command)
-	{
-		command = command.ToLowerInvariant().Trim();
+    private readonly string TwitchHelpMessage = @"!{0} <button> [Presses the specified button] | Valid buttons are Parallel, Serial, Stereo RCA, RJ-45, DVI-D, PS/2, and Confirm | Presses can be chained with commas or semicolons";
 
-		if (command.Equals("confirm"))
-		{
-			return new[] { confirm };
-		}
+    KMSelectable[] ProcessTwitchCommand(string command)
+    {
+        string[] cmdSplit = command.ToLowerInvariant().Split(new char[] { ';', ',' });
+        List<KMSelectable> btnsToPress = new List<KMSelectable>();
 
+        for (int i = 0; i < cmdSplit.Length; i++)
+        {
+            if (cmdSplit[i].Trim() == "dvi-d")
+                btnsToPress.Add(Button[0]);
+            else if (cmdSplit[i].Trim() == "parallel")
+                btnsToPress.Add(Button[1]);
+            else if (cmdSplit[i].Trim() == "ps/2")
+                btnsToPress.Add(Button[2]);
+            else if (cmdSplit[i].Trim() == "rj-45")
+                btnsToPress.Add(Button[3]);
+            else if (cmdSplit[i].Trim() == "serial")
+                btnsToPress.Add(Button[4]);
+            else if (cmdSplit[i].Trim() == "stereo rca")
+                btnsToPress.Add(Button[5]);
+            else if (cmdSplit[i].Trim() == "confirm")
+                btnsToPress.Add(confirm);
+        }
 
+        if (btnsToPress.Count > 0)
+            return btnsToPress.ToArray();
+        return null;
+    }
 
-		return null; 
-	}
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        #region stage1solve
+        int value1 = 0;
+
+        int[] serNum = Info.GetSerialNumberNumbers().ToArray<int>();
+        char[] serLet = Info.GetSerialNumberLetters().ToArray<char>();
+
+        for (int i = 0; i < serNum.Length; i++)
+        {
+            value1 += serNum[i];
+        }
+        //unfinished
+        int index = char.ToUpper(serLet[0]) - 64;
+
+        value1 *= index;
+
+        value1 %= 6;
+
+        Button[value1].OnInteract();
+        yield return new WaitForSeconds(.1f);
+        confirm.OnInteract();
+        yield return new WaitForSeconds(.1f);
+        #endregion
+
+        #region stage2solve
+        int value2 = 2;
+
+        value2 += dBatteries;
+        value2 *= (totalBatteries + batteryHolders);
+
+        value2 %= 6;
+
+        Button[value2].OnInteract();
+        yield return new WaitForSeconds(.1f);
+        confirm.OnInteract();
+        yield return new WaitForSeconds(.1f);
+        #endregion
+
+        #region stage3solve
+        int value3 = 50;
+
+        List<char> litChars = new List<char>();
+        List<char> unlitChars = new List<char>();
+
+        for (int i = 0; i < litIndicators.Count; i++)
+        {
+            char[] curChars;
+            curChars = litIndicators[i].ToCharArray();
+            foreach (char c in curChars)
+            {
+                litChars.Add(c);
+            }
+        }
+
+        for (int i = 0; i < unlitIndicators.Count; i++)
+        {
+            char[] curChars;
+            curChars = unlitIndicators[i].ToCharArray();
+            foreach (char c in curChars)
+            {
+                unlitChars.Add(c);
+            }
+        }
+
+        foreach (char c in litChars)
+        {
+            value3 += char.ToUpper(c) - 64;
+        }
+        foreach (char c in unlitChars)
+        {
+            value3 -= char.ToUpper(c) - 64;
+        }
+
+        while (value3 < 0)
+        {
+            value3 += 6;
+        }
+
+        value3 %= 6;
+
+        Button[value3].OnInteract();
+        yield return new WaitForSeconds(.1f);
+        confirm.OnInteract();
+        yield return new WaitForSeconds(.1f);
+        #endregion
+
+        #region stage4solve
+        Button[Stage4Sol()].OnInteract();
+        yield return new WaitForSeconds(.1f);
+        #endregion
+
+        confirm.OnInteract();
+    }
 }
 
 
