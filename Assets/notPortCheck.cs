@@ -423,7 +423,8 @@ public class notPortCheck : MonoBehaviour {
             else if (cmdSplit[i].Trim() == "stereo rca")
                 btnsToPress.Add(Button[5]);
             else if (cmdSplit[i].Trim() == "confirm")
-                btnsToPress.Add(confirm);
+	            btnsToPress.Add(confirm);
+            else return null;
         }
 
         if (btnsToPress.Count > 0)
